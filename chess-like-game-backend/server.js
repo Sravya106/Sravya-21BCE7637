@@ -3,11 +3,8 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const { WebSocketServer } = require('ws');
 
-// Initialize Express app
 const app = express();
 const PORT = process.env.PORT || 4000;
-
-// Middleware
 app.use(cors());
 app.use(express.json());
 
@@ -69,14 +66,10 @@ const handleMove = async (ws, data) => {
   }
 };
 
-// Simple move processing logic (to be extended with your game rules)
 const processMove = (game, player, move) => {
-  // Implement your move logic here based on game rules
-  // Example: Update board, check win condition, switch turns, etc.
-  return true; // or false if the move is invalid
+  return true;
 };
 
-// Create a new game
 app.post('/api/new-game', async (req, res) => {
   const newGame = new Game({
     board: Array(5).fill().map(() => Array(5).fill(null)), // 5x5 grid
@@ -90,7 +83,6 @@ app.post('/api/new-game', async (req, res) => {
   res.json(newGame);
 });
 
-// Get the current game state
 app.get('/api/game/:id', async (req, res) => {
   const game = await Game.findById(req.params.id);
   if (game) {
@@ -99,13 +91,10 @@ app.get('/api/game/:id', async (req, res) => {
     res.status(404).send('Game not found');
   }
 });
-
-// Start the server
 const server = app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
 
-// Upgrade the HTTP server to handle WebSocket connections
 server.on('upgrade', (request, socket, head) => {
   wss.handleUpgrade(request, socket, head, (ws) => {
     wss.emit('connection', ws, request);
