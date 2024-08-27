@@ -9,7 +9,6 @@ This project is an advanced chess-like game implemented using React for the fron
 - **Two Types of Pieces:**
   - **Pawns (P):** Can move 1 step in any direction (up, down, left, or right).
   - **Heroes (H):** Can move up to 2 steps in any direction (up, down, left, or right).
-- **Live Updates:** Real-time game updates through WebSocket.
 - **Move History:** Track and display all moves made during the game.
 - **Endgame Detection:** Automatically detects and announces the winner when the game ends.
 - **Reset Game:** Start a new game at any time.
