@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Board from './Components/Board';
 import initialBoard from './initialBoard';
 import './App.css';
@@ -11,6 +11,8 @@ const App = () => {
   const [winner, setWinner] = useState(null);
 
   const handleSquareClick = (row, col) => {
+    if (winner) return; 
+
     const piece = board[row][col];
 
     if (selectedPiece) {
@@ -21,9 +23,9 @@ const App = () => {
       const rowDistance = Math.abs(row - fromRow);
       const colDistance = Math.abs(col - fromCol);
       const isValidMove = selectedPieceObj.name.startsWith('P')
-        ? (rowDistance === 1 && colDistance === 0) || (rowDistance === 0 && colDistance === 1) 
+        ? (rowDistance === 1 && colDistance === 0) || (rowDistance === 0 && colDistance === 1)
         : selectedPieceObj.name.startsWith('H')
-        ? (rowDistance <= 3 && colDistance === 0) || (rowDistance === 0 && colDistance <= 3) 
+        ? (rowDistance <= 2 && colDistance === 0) || (rowDistance === 0 && colDistance <= 2)
         : false;
 
       const isAdjacentOpponentPawn = selectedPieceObj.name.startsWith('P') &&
@@ -51,7 +53,7 @@ const App = () => {
 
         setSelectedPiece(null);
         setTurn(turn === 'A' ? 'B' : 'A');
-        checkForWinner(newBoard); // Check if there's a winner after each move
+        checkForWinner(newBoard);
       } else {
         console.log('Invalid move:', {
           piece: selectedPieceObj,
@@ -68,7 +70,7 @@ const App = () => {
   };
 
   const determineMoveType = (fromRow, fromCol, toRow, toCol) => {
-    if (fromRow === toRow && toCol > fromCol) return 'Right Move'; 
+    if (fromRow === toRow && toCol > fromCol) return 'Right Move';
     if (fromRow === toRow && toCol < fromCol) return 'Left Move';
     if (fromCol === toCol && toRow > fromRow) return 'Forward Move';
     if (fromCol === toCol && toRow < fromRow) return 'Back Move';
@@ -86,14 +88,35 @@ const App = () => {
     }
   };
 
+  const resetGame = () => {
+    setBoard(initialBoard);
+    setSelectedPiece(null);
+    setTurn('A');
+    setHistory([]);
+    setWinner(null);
+  };
+
   return (
     <div className="App">
       <h1>Advanced Chess-like Game</h1>
+      
+      <div style={{ color: 'white', margin: '20px 0', paddingLeft: '20px' }}>
+          <li>There are two types of pieces: Pawns (P) and Heroes (H).</li>
+          <li>Pawns can move 1 step in any direction (up, down, left, or right).</li>
+          <li>Heroes can move up to 2 steps in any direction (up, down, left, or right).</li>
+          <li>Click on the pawn, then on the square you want to move it.</li>
+          <li>You can capture an opponent's piece if it's within your movement range.</li>
+      </div>
+      
       {winner ? (
-        <h2 style={{colour:'green'}}>Player {winner} wins!</h2>
+        <div>
+          <h2 style={{ color: 'green' }}>Player {winner} wins!</h2>
+          <button onClick={resetGame}>Reset Game</button>
+        </div>
       ) : (
         <h2>{turn === 'A' ? "Player A's turn" : "Player B's turn"}</h2>
       )}
+      
       <Board board={board} onSquareClick={handleSquareClick} />
       <MoveHistory history={history} />
     </div>
@@ -117,5 +140,7 @@ const MoveHistory = ({ history }) => {
 };
 
 export default App;
+
+
 
 
