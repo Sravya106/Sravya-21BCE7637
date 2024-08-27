@@ -111,7 +111,7 @@ const App = () => {
       {winner ? (
         <div>
           <h2 style={{ color: 'green' }}>Player {winner} wins!</h2>
-          <button onClick={resetGame}>Reset Game</button>
+          <button className='reset-button' onClick={resetGame}>Reset Game</button>
         </div>
       ) : (
         <h2>{turn === 'A' ? "Player A's turn" : "Player B's turn"}</h2>
